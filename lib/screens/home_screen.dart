@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:ainme_vault/screens/anime_detail_screen.dart';
 import 'package:ainme_vault/services/anilist_service.dart';
+import 'package:ainme_vault/services/notification_service.dart';
 import 'package:ainme_vault/theme/app_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isGridView = false; // Track view mode
 
   Timer? _timer;
-  static const double _cardHorizontalMargin = 24.0;
+  static const double _cardHorizontalMargin = 16.0;
 
   late final ValueNotifier<Color> _bgColorNotifier;
   late final ValueNotifier<int> _pageIndexNotifier;
@@ -67,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _bgColorNotifier = ValueNotifier(Colors.white);
     _pageIndexNotifier = ValueNotifier(0);
     _fetchAiringAnime();
+    NotificationService.init();
   }
 
   @override
@@ -286,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         const SizedBox(height: 20),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -333,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 24.0,
+                              horizontal: 16.0,
                             ),
                             child: Row(
                               children: [
@@ -374,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.primary : Colors.grey.shade300,
           borderRadius: BorderRadius.circular(24),
@@ -382,6 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Text(
           label,
           style: TextStyle(
+            fontSize: 14,
             color: isSelected ? Colors.white : Colors.black87,
             fontWeight: FontWeight.w600,
           ),
@@ -978,7 +981,7 @@ class GreetingSection extends StatelessWidget {
 
     if (user == null) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1018,7 +1021,7 @@ class GreetingSection extends StatelessWidget {
         }
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

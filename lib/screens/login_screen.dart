@@ -1,5 +1,6 @@
 import 'package:ainme_vault/main.dart';
 import 'package:ainme_vault/screens/forgot_password_screen.dart';
+import 'package:ainme_vault/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:ainme_vault/theme/app_theme.dart';
 import 'package:ainme_vault/screens/signup_screen.dart';
@@ -114,6 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // 🔐 Firebase Sign-In
       await FirebaseAuth.instance.signInWithCredential(credential);
+      await NotificationService.init();
 
       // 🔥 (2) Clear pending credential after success
       _pendingGoogleCredential = null;

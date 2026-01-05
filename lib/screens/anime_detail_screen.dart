@@ -37,8 +37,21 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
   late AnimationController _dotAnimationController;
   Timer? _countdownTimer;
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
-  bool _isSubscribedToEpisode = false;
+
   bool _isInUserList = false; // Track if anime is in user's list
+
+  Stream<bool> episodeSubscriptionStream(int animeId) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return const Stream.empty();
+
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .collection('episode_notifications')
+        .doc(animeId.toString())
+        .snapshots()
+        .map((doc) => doc.exists);
+  }
 
   @override
   void initState() {
@@ -1864,54 +1877,81 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen>
           const Spacer(),
 
           // RIGHT: bell
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.lightImpact();
-              setState(() {
-                _isSubscribedToEpisode = !_isSubscribedToEpisode;
-              });
+          StreamBuilder<bool>(
+            stream: episodeSubscriptionStream(anime['id']),
+            builder: (context, snapshot) {
+              final isSubscribed = snapshot.data ?? false;
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 50,
-                    vertical: 16,
-                  ),
-                  backgroundColor: AppTheme.accent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  content: Text(
-                    _isSubscribedToEpisode
-                        ? "Episode notifications enabled"
-                        : "Episode notifications disabled",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
+              return GestureDetector(
+                onTap: () async {
+                  HapticFeedback.lightImpact();
+
+                  final user = FirebaseAuth.instance.currentUser;
+                  if (user == null) return;
+
+                  final ref = FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user.uid)
+                      .collection('episode_notifications')
+                      .doc(anime['id'].toString());
+
+                  if (isSubscribed) {
+                    await ref.delete();
+                  } else {
+                    await ref.set({
+                      'animeId': anime['id'],
+                      'title':
+                          anime['title']?['english'] ??
+                          anime['title']?['romaji'],
+                      'nextEpisode': anime['nextAiringEpisode']['episode'],
+                      'airingAt': anime['nextAiringEpisode']['airingAt'],
+                      'createdAt': FieldValue.serverTimestamp(),
+                    });
+                  }
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 50,
+                        vertical: 16,
+                      ),
+                      backgroundColor: AppTheme.accent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      content: Text(
+                        isSubscribed
+                            ? "Episode notifications disabled"
+                            : "Episode notifications enabled",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      duration: const Duration(seconds: 2),
                     ),
+                  );
+                },
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  transitionBuilder: (child, animation) {
+                    return ScaleTransition(scale: animation, child: child);
+                  },
+                  child: Icon(
+                    isSubscribed
+                        ? Icons.notifications_active_rounded
+                        : Icons.notifications_none_rounded,
+                    key: ValueKey(isSubscribed),
+                    color: isSubscribed
+                        ? AppTheme.primary
+                        : Colors.grey.shade500,
+                    size: 24,
                   ),
-                  duration: const Duration(seconds: 2),
                 ),
               );
             },
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              transitionBuilder: (child, animation) {
-                return ScaleTransition(scale: animation, child: child);
-              },
-              child: Icon(
-                _isSubscribedToEpisode
-                    ? Icons.notifications_active_rounded
-                    : Icons.notifications_none_rounded,
-                key: ValueKey(_isSubscribedToEpisode),
-                color: _isSubscribedToEpisode
-                    ? AppTheme.primary
-                    : Colors.grey.shade500,
-                size: 24,
-              ),
-            ),
           ),
         ],
       ),
