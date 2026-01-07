@@ -245,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return SingleChildScrollView(
-                  padding: const EdgeInsets.only(bottom: 120), // nav bar height
+                  padding: const EdgeInsets.only(bottom: 100), // nav bar height
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: constraints.maxHeight, // 🔥 KEY FIX
@@ -359,90 +359,94 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      _isGridView
-                                          ? Icons.view_list_rounded
-                                          : Icons.grid_view_rounded,
-                                    ),
-                                    style: IconButton.styleFrom(
-                                      foregroundColor: AppTheme.primary,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isGridView = !_isGridView;
-                                      });
-                                    },
-                                  ),
-                                  PopupMenuButton<String>(
-                                    icon: Icon(
-                                      Icons.tune_rounded,
-                                      color: AppTheme.primary,
-                                    ),
-                                    offset: const Offset(0, 52),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    color: Colors.white,
-                                    elevation: 12,
-                                    onSelected: (value) {
-                                      setState(() {
-                                        if (_sortBy == value) {
-                                          _sortAscending = !_sortAscending;
-                                        } else {
-                                          _sortBy = value;
-                                          _sortAscending = value == 'title';
-                                        }
-                                      });
-                                    },
-                                    itemBuilder: (context) => [
-                                      _filterItem(
-                                        value: 'title',
-                                        label: 'Title',
-                                        icon: Icons.sort_by_alpha_rounded,
+                              // Only show controls when logged in
+                              if (FirebaseAuth.instance.currentUser != null)
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        _isGridView
+                                            ? Icons.view_list_rounded
+                                            : Icons.grid_view_rounded,
                                       ),
-                                      _filterItem(
-                                        value: 'score',
-                                        label: 'Score',
-                                        icon: Icons.star_rounded,
+                                      style: IconButton.styleFrom(
+                                        foregroundColor: AppTheme.primary,
                                       ),
-                                      _filterItem(
-                                        value: 'progress',
-                                        label: 'Progress',
-                                        icon: Icons.trending_up_rounded,
+                                      onPressed: () {
+                                        setState(() {
+                                          _isGridView = !_isGridView;
+                                        });
+                                      },
+                                    ),
+                                    PopupMenuButton<String>(
+                                      icon: Icon(
+                                        Icons.tune_rounded,
+                                        color: AppTheme.primary,
                                       ),
-                                      _filterItem(
-                                        value: 'lastUpdated',
-                                        label: 'Updated',
-                                        icon: Icons.update_rounded,
+                                      offset: const Offset(0, 52),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                      color: Colors.white,
+                                      elevation: 12,
+                                      onSelected: (value) {
+                                        setState(() {
+                                          if (_sortBy == value) {
+                                            _sortAscending = !_sortAscending;
+                                          } else {
+                                            _sortBy = value;
+                                            _sortAscending = value == 'title';
+                                          }
+                                        });
+                                      },
+                                      itemBuilder: (context) => [
+                                        _filterItem(
+                                          value: 'title',
+                                          label: 'Title',
+                                          icon: Icons.sort_by_alpha_rounded,
+                                        ),
+                                        _filterItem(
+                                          value: 'score',
+                                          label: 'Score',
+                                          icon: Icons.star_rounded,
+                                        ),
+                                        _filterItem(
+                                          value: 'progress',
+                                          label: 'Progress',
+                                          icon: Icons.trending_up_rounded,
+                                        ),
+                                        _filterItem(
+                                          value: 'lastUpdated',
+                                          label: 'Updated',
+                                          icon: Icons.update_rounded,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                            ),
-                            child: Row(
-                              children: [
-                                _statusChip("Completed"),
-                                const SizedBox(width: 12),
-                                _statusChip("Planning"),
-                                const SizedBox(width: 12),
-                                _statusChip("Watching"),
-                              ],
+                        // Only show status chips when logged in
+                        if (FirebaseAuth.instance.currentUser != null)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              child: Row(
+                                children: [
+                                  _statusChip("Completed"),
+                                  const SizedBox(width: 12),
+                                  _statusChip("Planning"),
+                                  const SizedBox(width: 12),
+                                  _statusChip("Watching"),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
 
                         MyAnimeList(
                           status: _selectedStatus,
@@ -730,21 +734,25 @@ class _MyAnimeListState extends State<MyAnimeList> {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.lock_outline, size: 48, color: Colors.grey),
-            const SizedBox(height: 16),
-            const Text(
-              "Login to track your anime",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+      return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.35,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(Icons.lock_outline, size: 48, color: Colors.grey),
+              const SizedBox(height: 16),
+              const Text(
+                "Login to track your anime",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
@@ -822,7 +830,7 @@ class _MyAnimeListState extends State<MyAnimeList> {
               16,
               0,
               16,
-              120, // 🔥 space for bottom nav
+              100, // 🔥 space for bottom nav
             ),
 
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
