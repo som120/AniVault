@@ -27,7 +27,6 @@ class AppUpdateService {
       RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 10),
         minimumFetchInterval: Duration.zero, // dev only
-
         // minimumFetchInterval: const Duration(hours: 6), //production use
       ),
     );
@@ -82,81 +81,107 @@ class AppUpdateService {
     showCupertinoDialog(
       context: Navigator.of(context, rootNavigator: true).context,
       barrierDismissible: !force,
-      builder: (_) => CupertinoAlertDialog(
-        title: Column(
-          children: [
-            const SizedBox(height: 8),
-            Image.asset('assets/Apple_logo_black.png', width: 56, height: 56),
-            const SizedBox(height: 12),
-            const Text(
-              'Update Available',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-          ],
-        ),
-        content: Padding(
-          padding: const EdgeInsets.only(top: 12),
-          child: Column(
-            children: [
-              const Text(
-                'A newer version of the app is available.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14),
-              ),
-              const SizedBox(height: 12),
+      builder: (dialogContext) {
+        return WillPopScope(
+          onWillPop: () async => !force, // 🚫 block back button if forced
+          child: CupertinoAlertDialog(
+            title: Column(
+              children: [
+                const SizedBox(height: 8),
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    color: CupertinoColors.systemGrey6,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/icon/aniflux_logo.png',
+                      width: 56,
+                      height: 56,
+                    ),
+                  ),
+                ),
 
-              // 🔥 Version display
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                const SizedBox(height: 12),
+                const Text(
+                  'Update Available',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Column(
                 children: [
-                  Text(
-                    currentVersion,
-                    style: const TextStyle(
-                      color: CupertinoColors.systemGrey,
-                      fontSize: 13,
-                    ),
+                  const Text(
+                    'A newer version of the app is available.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 6),
-                    child: Icon(
-                      CupertinoIcons.arrow_right,
-                      size: 14,
-                      color: CupertinoColors.systemGrey,
-                    ),
-                  ),
-                  Text(
-                    latestVersion,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        currentVersion,
+                        style: const TextStyle(
+                          color: CupertinoColors.systemGrey,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6),
+                        child: Icon(
+                          CupertinoIcons.arrow_right,
+                          size: 14,
+                          color: CupertinoColors.systemGrey,
+                        ),
+                      ),
+                      Text(
+                        latestVersion,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+            ),
+            actions: [
+              if (!force)
+                CupertinoDialogAction(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('Later'),
+                ),
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                isDestructiveAction: force,
+                onPressed: _launchStore,
+                child: const Text('Update'),
+              ),
             ],
           ),
-        ),
-        actions: [
-          if (!force)
-            CupertinoDialogAction(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Later'),
-            ),
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            isDestructiveAction: force,
-            onPressed: _launchStore,
-            child: const Text('Update'),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   static Future<void> _launchStore() async {
     final url = Platform.isAndroid
         ? Uri.parse(
-            'https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME',
+            'https://ani-flux.vercel.app/',
+            // https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME
           )
         : Uri.parse('https://apps.apple.com/app/idYOUR_APP_ID');
 
