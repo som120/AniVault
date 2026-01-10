@@ -162,7 +162,7 @@ class _AccountSettingsBottomSheetState
                           const SizedBox(height: 10),
                           _switchTile(
                             icon: Icons.explicit,
-                            title: "Show Adult Content",
+                            title: "Adult Content",
                             subtitle: "Enable 18+ content in search results",
                             value: _showAdultContent,
                             onChanged: _toggleAdultContent,
@@ -279,7 +279,7 @@ class _AccountSettingsBottomSheetState
     required ValueChanged<bool> onChanged,
   }) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(14),
@@ -307,10 +307,23 @@ class _AccountSettingsBottomSheetState
               ],
             ),
           ),
-          Switch.adaptive(
+          Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xFFEF4444), // Match icon color
+            thumbColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return const Color(0xFFEF4444);
+              }
+              return AppTheme.primary;
+            }),
+            trackColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
+                return const Color(0xFFEF4444).withOpacity(0.4);
+              }
+              return AppTheme.primary.withOpacity(0.35);
+            }),
+            trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
         ],
       ),
