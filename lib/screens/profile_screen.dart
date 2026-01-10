@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ainme_vault/widgets/avatar_picker_bottom_sheet.dart';
 import 'package:ainme_vault/widgets/edit_profile_bottom_sheet.dart';
 import 'package:ainme_vault/widgets/account_settings_bottom_sheet.dart';
+import 'package:ainme_vault/screens/about_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart'; // import to access MainScreen
 
@@ -93,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                "Welcome to AniVault!",
+                "Welcome to AniFlux!",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -413,9 +414,6 @@ class ProfileScreen extends StatelessWidget {
   // ---------------------------
   // SETTINGS TILE WIDGET
   // ---------------------------
-  // ---------------------------
-  // SETTINGS TILE WIDGET
-  // ---------------------------
   Widget _buildSettingsTile(
     IconData icon,
     String title,
@@ -484,6 +482,11 @@ class ProfileScreen extends StatelessWidget {
               }
             }
           }
+        } else if (title == "About") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AboutScreen()),
+          );
         } else if (title == "Edit Profile") {
           // Show edit profile bottom sheet
           final result = await showModalBottomSheet(

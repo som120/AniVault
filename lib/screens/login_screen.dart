@@ -279,7 +279,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 4),
                         const Text(
-                          "AniVault Login Now!",
+                          "AniFlux Login Now!",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 22, // Reduced size
