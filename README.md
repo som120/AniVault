@@ -30,6 +30,21 @@ It allows users to **search, browse, and track anime**, with **cloud sync using 
   <sub>Coming soon on Google Play</sub>
 </p>
 
+---
+
+<h2 align="center">☕ Support AniFlux</h2>
+
+<p align="center">If you like **AniFlux** and want to support its development, 
+  <br>consider buying me a coffee ❤️  
+Every contribution helps keep the app free and ad-free.</p>
+<p align="center">
+<a href="https://www.buymeacoffee.com/som120" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="200">
+</a>
+</p>
+
+---
+
 ## 📱 Screenshots
 
 | Home Screen | Anime Details | Search | Profile |
@@ -227,6 +242,7 @@ This project is licensed under the **MIT License** and follows open-source best 
 Please read the respective files in the repository for more details.
 
 ---
+
 <p align="center">
   Built with ❤️ using Flutter • Firebase • AppWrite • AniList API
 </p>
