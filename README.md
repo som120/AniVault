@@ -38,7 +38,7 @@ It allows users to **search, browse, and track anime**, with **cloud sync using 
   <br>consider buying me a coffee ❤️  
 Every contribution helps keep the app free and ad-free.</p>
 <p align="center">
-<a href="https://www.buymeacoffee.com/som120" target="_blank">
+<a href="https://www.buymeacoffee.com/sompaul" target="_blank">
   <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" width="200">
 </a>
 </p>
