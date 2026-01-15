@@ -49,7 +49,7 @@ Every contribution helps keep the app free and ad-free.</p>
 
 | Home Screen | Anime Details | Search | Profile |
 |:---:|:---:|:---:|:---:|
-| <img src="assets/screenshots/home.png" width="200" alt="Home" /> | <img src="assets/screenshots/details.png" width="200" alt="Details" /> | <img src="assets/screenshots/search.png" width="200" alt="Search" /> | <img src="assets/screenshots/profile.png" width="200" alt="Profile" /> |
+| <img src="assets/Screenshorts/Home.png" width="200" alt="Home" /> | <img src="assets/Screenshorts/Detail.png" width="200" alt="Details" /> | <img src="assets/Screenshorts/Search.png" width="200" alt="Search" /> | <img src="assets/Screenshorts/Profile.png" width="200" alt="Profile" /> |
 
 ---
 
