@@ -34,7 +34,7 @@ It allows users to **search, browse, and track anime**, with **cloud sync using 
 
 <h2 align="center">☕ Support AniFlux</h2>
 
-<p align="center">If you like **AniFlux** and want to support its development, 
+<p align="center">If you like <strong>AniFlux</strong> and want to support its development, 
   <br>consider buying me a coffee ❤️  
 Every contribution helps keep the app free and ad-free.</p>
 <p align="center">
