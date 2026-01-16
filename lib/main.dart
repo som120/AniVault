@@ -4,6 +4,7 @@ import 'package:ainme_vault/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter_displaymode/flutter_displaymode.dart';
@@ -24,6 +25,14 @@ void main() async {
   } catch (e) {
     // Ignore errors if platform doesn't support it
   }
+
+  // Register AniFlux MIT license to show properly in license page
+  LicenseRegistry.addLicense(() async* {
+    final licenseText = await rootBundle.loadString(
+      'assets/licenses/MIT_LICENSE.txt',
+    );
+    yield LicenseEntryWithLineBreaks(['AniFlux'], licenseText);
+  });
 
   runApp(const AnimeVaultApp());
 }
