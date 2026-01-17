@@ -1,8 +1,10 @@
 import 'package:ainme_vault/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ainme_vault/theme/app_theme.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -300,6 +302,16 @@ class _SignupScreenState extends State<SignupScreen> {
                                           ),
                                           fontWeight: FontWeight.w600,
                                         ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            launchUrl(
+                                              Uri.parse(
+                                                'https://ani-flux.vercel.app/terms-and-conditions',
+                                              ),
+                                              mode: LaunchMode
+                                                  .externalApplication,
+                                            );
+                                          },
                                       ),
                                     ],
                                   ),
